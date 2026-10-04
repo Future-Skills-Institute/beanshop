@@ -42,7 +42,7 @@ Ponowiono uruchomienie tą samą komendą:
 npm run test:mutation -- --force --mutate src/domain/pricing.ts
 ```
 
-- testy: 8 uruchomionych;
+- testy: 10 uruchomionych;
 - mutanty: 33;
 - zabite: 33;
 - przeżyte: 0;
