@@ -9,9 +9,8 @@ test.describe('Koszyk', () => {
     expect(await catalog.cartCount.textContent()).toBe('1');
   });
 
-  test('pokazuje podsumowanie z dostawa', async ({ loggedInPage, api, cartPage }) => {
-    await loggedInPage.request.post('/api/cart/items', { data: { productId: PRODUCTS.v60.id, quantity: 1 } });
-    await cartPage.goto();
+  test('pokazuje podsumowanie z dostawa', async ({ cartWith }) => {
+    const cartPage = await cartWith([{ product: 'v60', qty: 1 }]);
     await expect(cartPage.subtotal).toHaveText('99,00 zł');
     await expect(cartPage.shipping).toHaveText('14,99 zł');
     await expect(cartPage.total).toHaveText('113,99 zł');
