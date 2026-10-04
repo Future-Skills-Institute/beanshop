@@ -12,7 +12,7 @@ test.describe('Katalog', () => {
     await expect(catalog.products).toHaveCount(1);
   });
 
-  test('wyszukuje bez rozróżniania wielkości liter (BR-10)', async ({ catalog }) => {
+  test('wyszukuje bez rozróżniania wielkości liter (BR-10)', async ({ api, catalog }) => {
     // BUG: wyszukiwanie wielkimi literami nie zwraca produktu, BR-10
     test.fail(true, 'BUG: wyszukiwanie nie jest niewrażliwe na wielkość liter, BR-10');
     await catalog.goto();
@@ -25,13 +25,13 @@ test.describe('Katalog', () => {
     await expect(catalog.product('Kolumbia Supremo 250 g')).toHaveCount(1);
   });
 
-  test('odrzuca zapytanie krótsze niż 2 znaki (BR-10)', async ({ catalog }) => {
+  test('odrzuca zapytanie krótsze niż 2 znaki (BR-10)', async ({ api, catalog }) => {
     await catalog.goto();
     await catalog.searchFor('k');
     await expect(catalog.searchError).toHaveText('Wpisz co najmniej 2 znaki');
   });
 
-  test('pokazuje brak wyników dla nieistniejącego produktu (BR-10)', async ({ catalog }) => {
+  test('pokazuje brak wyników dla nieistniejącego produktu (BR-10)', async ({ api, catalog }) => {
     await catalog.goto();
     await catalog.searchFor('Nieistniejąca kawa');
     await expect(catalog.noResults).toHaveText('Brak produktów spełniających kryteria.');
