@@ -64,3 +64,4 @@ workshop/              dane do przygotowania repo przez trenera (issues, skrypt 
 2. Każdy pracuje na swoim branchu z prefiksem grupy (`m/` lub `a/`).
 3. PR-y uczestników są **draft** i mają etykietę grupy.
 4. Przed zgłoszeniem błędu sprawdź, czy nie ma go już w issues Twojej grupy (filtr `label:grupa-M` / `label:grupa-A`).
+###
