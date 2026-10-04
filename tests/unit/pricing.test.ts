@@ -17,7 +17,7 @@ describe('pricing', () => {
   });
 
   test.fails('daje darmowa dostawe od 200,00 zl po rabacie (BR-04)', () => {
-    // BUG: implementacja używa > zamiast >=; TODO: zgłosić, BR-04
+    // BUG: implementacja używa > zamiast >=, BR-04; propozycja zgłoszenia: próg darmowej dostawy
     expect(shippingCost(200, 'STANDARD')).toBe(0);
   });
 
@@ -35,8 +35,8 @@ describe('pricing', () => {
     expect(discountAmount(subtotal, [{ code: 'TEST', type: 'PERCENT', value: percent }])).toBe(expected);
   });
 
-  test.fails('zaokrągla rabat procentowy do 0,01 zl (BR-06, BR-08)', () => {
-    // BUG: implementacja zwraca 9.999 zamiast 10.00; TODO: zgłosić, BR-08
+  test.fails('zaokragla rabat procentowy do 0,01 zl (BR-06, BR-08)', () => {
+    // BUG: implementacja zwraca 9.999 zamiast 10.00, BR-08; propozycja zgłoszenia: zaokrąglanie rabatów
     expect(priceCart([{ lineTotal: 99.99 }], [code('KAWA10')], 'STANDARD').discount).toBe(10);
   });
 
