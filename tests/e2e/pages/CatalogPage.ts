@@ -5,6 +5,7 @@ export class CatalogPage {
   readonly category: Locator;
   readonly products: Locator;
   readonly noResults: Locator;
+  readonly searchError: Locator;
   readonly cartCount: Locator;
 
   constructor(private readonly page: Page) {
@@ -12,6 +13,7 @@ export class CatalogPage {
     this.category = page.getByLabel('Kategoria');
     this.products = page.getByTestId('product-card');
     this.noResults = page.getByTestId('no-results');
+    this.searchError = page.getByRole('alert');
     this.cartCount = page.getByTestId('cart-count');
   }
 
