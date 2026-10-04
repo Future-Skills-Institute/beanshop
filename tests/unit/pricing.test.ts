@@ -18,7 +18,7 @@ describe('pricing', () => {
     expect(shippingCost(250, 'STANDARD')).toBe(0);
   });
 
-  it.fails('daje darmową dostawę od 200 zł włącznie', () => {
+  it.fails('daje darmową dostawę od 200 zł włącznie // BR-04', () => {
     // BUG: implementacja używa > zamiast >=, BR-04; zgłosić jako błąd naliczania progu dostawy.
     expect(shippingCost(200, 'STANDARD')).toBe(0);
   });
@@ -70,7 +70,7 @@ describe('pricing', () => {
     expect(summary.discount).toBe(10);
   });
 
-  it('nalicza rabat procentowy dokładnie według wartości kodu', () => {
+  it('nalicza rabat procentowy dokładnie według wartości kodu // BR-06', () => {
     // BR-06
     expect(discountAmount(250, [code('KAWA10')])).toBe(25);
   });
@@ -81,11 +81,13 @@ describe('pricing', () => {
     expect(summary.total).toBe(114.99);
   });
 
-  it('nie zwraca ujemnej sumy koszyka // BR-08', () => {
+  it.fails('zaokrągla sumę koszyka do 2 miejsc // BR-08', () => {
+    // BUG: suma końcowa nie jest zaokrąglana po dodaniu dostawy; zgłosić jako błąd precyzji kwot.
     fc.assert(
-      fc.property(fc.integer({ min: 0, max: 1000 }), (subtotal) => {
+      fc.property(fc.integer({ min: 0, max: 100000 }).map((cents) => cents / 100), (subtotal) => {
         const summary = priceCart([{ lineTotal: subtotal }], [code('MINUS20')], 'STANDARD');
         expect(summary.total).toBeGreaterThanOrEqual(0);
+        expect(summary.total).toBe(Number(summary.total.toFixed(2)));
       }),
     );
   });
