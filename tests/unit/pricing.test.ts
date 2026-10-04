@@ -5,34 +5,38 @@ import { discountAmount, lineTotal, priceCart, shippingCost, SHIPPING } from '..
 const code = (c: string) => DISCOUNT_CODES.find((d) => d.code === c)!;
 
 describe('pricing', () => {
-  it('liczy wartosc pozycji', () => {
+  it('liczy wartość pozycji', () => {
     expect(lineTotal(44.99, 3)).toBe(134.97);
   });
 
-  it('nalicza dostawe standardowa ponizej progu', () => {
+  it('nalicza dostawę standardową poniżej progu', () => {
     expect(shippingCost(150, 'STANDARD')).toBe(SHIPPING.STANDARD);
   });
 
-  it('daje darmowa dostawe powyzej progu', () => {
+  it('daje darmową dostawę powyżej progu', () => {
     expect(shippingCost(250, 'STANDARD')).toBe(0);
   });
 
-  it.fails('daje darmowa dostawe od 200 zl wlacznie', () => {
-    // BUG: implementacja używa > zamiast >=, BR-04
+  it.fails('daje darmową dostawę od 200 zł włącznie', () => {
+    // BUG: implementacja używa > zamiast >=, BR-04; zgłosić jako błąd naliczania progu dostawy.
     expect(shippingCost(200, 'STANDARD')).toBe(0);
   });
 
-  it('nie nalicza dostawy dla pustego koszyka', () => {
+  it('nie nalicza dostawy standardowej dla pustego koszyka', () => {
     // BR-04
     expect(shippingCost(0, 'STANDARD')).toBe(0);
+  });
+
+  it('nie nalicza dostawy express dla pustego koszyka', () => {
+    // BR-04
     expect(shippingCost(0, 'EXPRESS')).toBe(0);
   });
 
-  it('nalicza doplate za express przy darmowej dostawie', () => {
+  it('nalicza dopłatę za express przy darmowej dostawie', () => {
     expect(shippingCost(250, 'EXPRESS')).toBe(SHIPPING.EXPRESS_SURCHARGE);
   });
 
-  it('nalicza rabat procentowy', () => {
+  it('nalicza rabat procentowy i sumę z dostawą', () => {
     const summary = priceCart([{ lineTotal: 100 }], [code('KAWA10')], 'STANDARD');
     // BR-06, BR-08
     expect(summary.discount).toBe(10);
@@ -41,7 +45,7 @@ describe('pricing', () => {
     expect(summary.appliedCodes).toEqual(['KAWA10']);
   });
 
-  it('rabat kwotowy nie obniza ceny ponizej zera', () => {
+  it('rabat kwotowy nie obniża ceny poniżej zera', () => {
     const summary = priceCart([{ lineTotal: 10 }], [code('MINUS20')], 'STANDARD');
     // BR-06
     expect(summary.discount).toBe(10);
@@ -52,7 +56,7 @@ describe('pricing', () => {
     expect(discountAmount(250, [code('KAWA10')])).toBe(25);
   });
 
-  it('odejmuje rabat od ceny i dodaje dostawe do sumy', () => {
+  it('nalicza sumę bez rabatu z dostawą standardową', () => {
     // BR-04, BR-08
     const summary = priceCart([{ lineTotal: 100 }], [], 'STANDARD');
     expect(summary.discount).toBe(0);

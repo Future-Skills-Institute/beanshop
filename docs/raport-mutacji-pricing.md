@@ -8,6 +8,9 @@ npm run test:mutation -- --mutate src/domain/pricing.ts --testFiles tests/unit/p
 
 ## Wynik końcowy
 
+- data uruchomienia: 2026-10-04
+- Stryker: 10.0.0
+- commit: 61e021a
 - mutacje: 33
 - zabite: 33
 - przetrwałe: 0
