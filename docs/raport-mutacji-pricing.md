@@ -10,7 +10,7 @@ npm run test:mutation -- --mutate src/domain/pricing.ts --testFiles tests/unit/p
 
 - data uruchomienia: 2026-10-04
 - Stryker: 10.0.0
-- commit: 61e021a
+- commit testów: ce514c3
 - mutacje: 33
 - zabite: 33
 - przetrwałe: 0
@@ -18,7 +18,7 @@ npm run test:mutation -- --mutate src/domain/pricing.ts --testFiles tests/unit/p
 - time-outy: 0
 - mutation score: 100,00%
 
-Testy jednostkowe: 17 zaliczonych oraz 1 oczekiwana porażka (`it.fails`).
+Testy jednostkowe: 18 zaliczonych oraz 1 oczekiwana porażka (`it.fails`).
 Oczekiwana porażka dokumentuje niezgodność implementacji z BR-04: kod używa
 warunku `> 200`, a wymaganie mówi „darmowy od 200,00 zł”, czyli `>= 200`.
 
