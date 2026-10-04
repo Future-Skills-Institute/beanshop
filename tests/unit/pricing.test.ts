@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, test } from 'vitest';
 import { DISCOUNT_CODES } from '../../src/domain/discounts';
 import { discountAmount, lineTotal, priceCart, shippingCost, SHIPPING } from '../../src/domain/pricing';
 
@@ -16,7 +16,7 @@ describe('pricing', () => {
     expect(shippingCost(afterDiscount, 'STANDARD')).toBe(expected);
   });
 
-  it.fails('daje darmowa dostawe od 200,00 zl po rabacie (BR-04)', () => {
+  test.fails('daje darmowa dostawe od 200,00 zl po rabacie (BR-04)', () => {
     // BUG: implementacja używa > zamiast >=; do zgłoszenia, BR-04
     expect(shippingCost(200, 'STANDARD')).toBe(0);
   });
@@ -25,14 +25,21 @@ describe('pricing', () => {
     expect(shippingCost(250, 'EXPRESS')).toBe(SHIPPING.EXPRESS_SURCHARGE);
   });
 
-  it('nalicza rabat procentowy zgodnie z procentem (BR-06)', () => {
-    expect(discountAmount(200, [{ code: 'TEST', type: 'PERCENT', value: 10 }])).toBe(20);
+  it.each([
+    [200, 10, 20],
+    [250, 10, 25],
+  ])('nalicza rabat procentowy dla kwoty %s i stawki %s%% (BR-06)', (subtotal, percent, expected) => {
+    expect(discountAmount(subtotal, [{ code: 'TEST', type: 'PERCENT', value: percent }])).toBe(expected);
   });
 
-  it('nalicza rabat procentowy i zwraca kod (BR-06)', () => {
+  it('nalicza rabat procentowy i dostawę (BR-04, BR-06)', () => {
     const summary = priceCart([{ lineTotal: 100 }], [code('KAWA10')], 'STANDARD');
     expect(summary.discount).toBe(10);
     expect(summary.shipping).toBe(SHIPPING.STANDARD);
+  });
+
+  it('dodaje dostawę do sumy po rabacie (BR-04, BR-06)', () => {
+    const summary = priceCart([{ lineTotal: 100 }], [code('KAWA10')], 'STANDARD');
     expect(summary.total).toBe(104.99);
   });
 
