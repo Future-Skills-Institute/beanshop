@@ -1,4 +1,5 @@
 import { describe, expect, it, test } from 'vitest';
+import fc from 'fast-check';
 import { DISCOUNT_CODES } from '../../src/domain/discounts';
 import { discountAmount, lineTotal, priceCart, shippingCost, SHIPPING } from '../../src/domain/pricing';
 
@@ -16,6 +17,7 @@ describe('pricing', () => {
     expect(shippingCost(afterDiscount, 'STANDARD')).toBe(expected);
   });
 
+  // Wartość 200,00 zł jest celowo sprawdzana poniżej jako znany błąd.
   test.fails('daje darmowa dostawe od 200,00 zl po rabacie (BR-04)', () => {
     // BUG: implementacja używa > zamiast >=, BR-04; propozycja zgłoszenia: próg darmowej dostawy
     expect(shippingCost(200, 'STANDARD')).toBe(0);
@@ -33,6 +35,16 @@ describe('pricing', () => {
     [250, 10, 25],
   ])('nalicza rabat procentowy dla kwoty %s i stawki %s%% (BR-06)', (subtotal, percent, expected) => {
     expect(discountAmount(subtotal, [{ code: 'TEST', type: 'PERCENT', value: percent }])).toBe(expected);
+  });
+
+  it('utrzymuje nieujemna sume i kwoty z dwoma miejscami (BR-08)', () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 0, max: 100000 }), (cents) => {
+        const summary = priceCart([{ lineTotal: cents / 100 }], [], 'STANDARD');
+        expect(summary.total).toBeGreaterThanOrEqual(0);
+        expect(summary.total).toBeCloseTo(Math.round(summary.total * 100) / 100, 10);
+      }),
+    );
   });
 
   test.fails('zaokragla rabat procentowy do 0,01 zl (BR-06, BR-08)', () => {
