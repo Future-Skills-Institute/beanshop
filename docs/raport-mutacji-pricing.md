@@ -18,8 +18,8 @@ npm run test:mutation -- --mutate src/domain/pricing.ts --testFiles tests/unit/p
 - time-outy: 0
 - mutation score: 100,00%
 
-Cały suite testów jednostkowych: 24 zaliczone oraz 3 oczekiwane porażki
-(`it.fails`); `pricing.test.ts` zawiera 19 przypadków po rozwinięciu tabeli
+Cały suite testów jednostkowych: 24 zaliczone oraz 2 oczekiwane porażki
+(`it.fails`); raport Strykera wykonał 19 przypadków z `pricing.test.ts` po rozwinięciu tabeli
 `it.each`. Oczekiwane porażki dokumentują niezgodności BR-04 (próg 200 zł)
 i BR-08 (brak zaokrąglenia sumy końcowej).
 

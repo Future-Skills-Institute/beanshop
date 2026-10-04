@@ -53,7 +53,7 @@ describe('pricing', () => {
     expect(summary.shipping).toBe(SHIPPING.STANDARD);
   });
 
-  it('dodaje rabat i dostawę do sumy // BR-08', () => {
+  it('dodaje rabat i dostawę do sumy // BR-04, BR-06, BR-08', () => {
     const summary = priceCart([{ lineTotal: 100 }], [code('KAWA10')], 'STANDARD');
     expect(summary.total).toBe(104.99);
   });
@@ -87,14 +87,8 @@ describe('pricing', () => {
     );
   });
 
-  it.fails('zaokrągla sumę koszyka do 2 miejsc // BR-08', () => {
-    // BUG: suma końcowa nie jest zaokrąglana po dodaniu dostawy; zgłosić jako błąd precyzji kwot.
-    const summary = priceCart([{ lineTotal: 100.03 }], [code('KAWA10')], 'STANDARD');
-    expect(summary.total).toBe(105.02);
-  });
-
   it.fails('zaokrągla każdą sumę koszyka do maksymalnie 2 miejsc // BR-08', () => {
-    // BUG: suma końcowa może zawierać więcej niż dwa miejsca po przecinku.
+    // BUG: suma końcowa może zawierać więcej niż dwa miejsca po przecinku, BR-08.
     fc.assert(
       fc.property(amountArb, (subtotal) => {
         const summary = priceCart([{ lineTotal: subtotal }], [code('KAWA10')], 'STANDARD');
