@@ -42,7 +42,7 @@ Ponowiono uruchomienie tą samą komendą:
 npm run test:mutation -- --force --mutate src/domain/pricing.ts
 ```
 
-- Stryker uruchomił 13 przypadków testowych z `pricing.test.ts` (w tym
+- Stryker uruchomił 16 przypadków testowych z `pricing.test.ts` (w tym
   przypadki rozwinięte przez `it.each` i dwa `test.fails`);
 - mutanty: 33;
 - zabite: 33;
@@ -50,7 +50,7 @@ npm run test:mutation -- --force --mutate src/domain/pricing.ts
 - timeouty/błędy: 0;
 - mutation score: **100,00%**.
 
-W całym zestawie unit uruchomiono 21 przypadków: 19 zaliczonych i 2
+W całym zestawie unit uruchomiono 24 przypadki: 22 zaliczone i 2
 oczekiwane niepowodzenia (`test.fails`):
 
 - BR-04: próg 200,00 zł używa w implementacji `>` zamiast wymaganego `>=`;
