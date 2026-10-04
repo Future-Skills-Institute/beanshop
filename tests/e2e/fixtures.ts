@@ -1,6 +1,6 @@
 import { test as base, type Page } from '@playwright/test';
 import { BeanShopApi } from '../support/api-client';
-import { USERS } from '../support/data';
+import { PRODUCTS, USERS } from '../support/data';
 import { CartPage } from './pages/CartPage';
 import { CatalogPage } from './pages/CatalogPage';
 import { LoginPage } from './pages/LoginPage';
@@ -11,6 +11,7 @@ type Fixtures = {
   loginPage: LoginPage;
   catalog: CatalogPage;
   cartPage: CartPage;
+  cartWith: (items: { product: keyof typeof PRODUCTS; qty: number }[]) => Promise<CartPage>;
 };
 
 export const test = base.extend<Fixtures>({
@@ -28,6 +29,17 @@ export const test = base.extend<Fixtures>({
   loginPage: async ({ page }, use) => use(new LoginPage(page)),
   catalog: async ({ page }, use) => use(new CatalogPage(page)),
   cartPage: async ({ page }, use) => use(new CartPage(page)),
+  // Koszyk zalogowanej Anny przygotowany przez API; zwraca otwarty CartPage.
+  cartWith: async ({ loggedInPage, cartPage }, use) => {
+    await use(async (items) => {
+      for (const { product, qty } of items) {
+        const res = await loggedInPage.request.post('/api/cart/items', { data: { productId: PRODUCTS[product].id, quantity: qty } });
+        if (!res.ok()) throw new Error(`Nie udalo sie dodac ${product} do koszyka: ${res.status()}`);
+      }
+      await cartPage.goto();
+      return cartPage;
+    });
+  },
 });
 
 export { expect } from '@playwright/test';
