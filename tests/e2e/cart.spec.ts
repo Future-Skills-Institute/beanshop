@@ -1,3 +1,4 @@
+import { PRODUCTS } from '../support/data';
 import { expect, test } from './fixtures';
 
 test.describe('Koszyk', () => {
@@ -16,7 +17,7 @@ test.describe('Koszyk', () => {
   });
 
   test('stosuje kod rabatowy', async ({ loggedInPage, cartPage }) => {
-    await loggedInPage.request.post('/api/cart/items', { data: { productId: 7, quantity: 1 } });
+    await loggedInPage.request.post('/api/cart/items', { data: { productId: PRODUCTS.v60.id, quantity: 1 } });
     await cartPage.goto();
     await cartPage.useCode('KAWA10');
     await expect(cartPage.discountMessage).toHaveText('Kod został zastosowany');
