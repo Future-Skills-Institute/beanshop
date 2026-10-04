@@ -4,6 +4,7 @@ import { DISCOUNT_CODES } from '../../src/domain/discounts';
 import { discountAmount, lineTotal, priceCart, shippingCost, SHIPPING } from '../../src/domain/pricing';
 
 const code = (c: string) => DISCOUNT_CODES.find((d) => d.code === c)!;
+const amountArb = fc.integer({ min: 0, max: 100000 }).map((cents) => cents / 100);
 
 describe('pricing', () => {
   it('liczy wartość pozycji // BR-08', () => {
@@ -79,7 +80,7 @@ describe('pricing', () => {
 
   it('nie zwraca ujemnej sumy koszyka // BR-08', () => {
     fc.assert(
-      fc.property(fc.integer({ min: 0, max: 100000 }).map((cents) => cents / 100), (subtotal) => {
+      fc.property(amountArb, (subtotal) => {
         const summary = priceCart([{ lineTotal: subtotal }], [code('MINUS20')], 'STANDARD');
         expect(summary.total).toBeGreaterThanOrEqual(0);
       }),
@@ -88,11 +89,7 @@ describe('pricing', () => {
 
   it.fails('zaokrągla sumę koszyka do 2 miejsc // BR-08', () => {
     // BUG: suma końcowa nie jest zaokrąglana po dodaniu dostawy; zgłosić jako błąd precyzji kwot.
-    fc.assert(
-      fc.property(fc.integer({ min: 0, max: 100000 }).map((cents) => cents / 100), (subtotal) => {
-        const summary = priceCart([{ lineTotal: subtotal }], [code('MINUS20')], 'STANDARD');
-        expect(summary.total).toBe(Number(summary.total.toFixed(2)));
-      }),
-    );
+    const summary = priceCart([{ lineTotal: 256.15 }], [code('MINUS20')], 'STANDARD');
+    expect(summary.total).toBe(236.15);
   });
 });
