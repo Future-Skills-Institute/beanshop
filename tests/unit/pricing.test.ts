@@ -89,7 +89,17 @@ describe('pricing', () => {
 
   it.fails('zaokrągla sumę koszyka do 2 miejsc // BR-08', () => {
     // BUG: suma końcowa nie jest zaokrąglana po dodaniu dostawy; zgłosić jako błąd precyzji kwot.
-    const summary = priceCart([{ lineTotal: 256.15 }], [code('MINUS20')], 'STANDARD');
-    expect(summary.total).toBe(236.15);
+    const summary = priceCart([{ lineTotal: 100.03 }], [code('KAWA10')], 'STANDARD');
+    expect(summary.total).toBe(105.02);
+  });
+
+  it.fails('zaokrągla każdą sumę koszyka do maksymalnie 2 miejsc // BR-08', () => {
+    // BUG: suma końcowa może zawierać więcej niż dwa miejsca po przecinku.
+    fc.assert(
+      fc.property(amountArb, (subtotal) => {
+        const summary = priceCart([{ lineTotal: subtotal }], [code('KAWA10')], 'STANDARD');
+        expect(summary.total).toBe(Number(summary.total.toFixed(2)));
+      }),
+    );
   });
 });
