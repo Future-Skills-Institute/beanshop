@@ -42,14 +42,16 @@ Ponowiono uruchomienie tą samą komendą:
 npm run test:mutation -- --force --mutate src/domain/pricing.ts
 ```
 
-- testy: 13 uruchomionych;
+- Stryker uruchomił 13 przypadków testowych z `pricing.test.ts` (w tym
+  przypadki rozwinięte przez `it.each` i dwa `test.fails`);
 - mutanty: 33;
 - zabite: 33;
 - przeżyte: 0;
 - timeouty/błędy: 0;
 - mutation score: **100,00%**.
 
-Test granicy 200,00 zł jest oznaczony jako oczekiwany błąd (`test.fails`),
-ponieważ implementacja w `src/domain/pricing.ts` używa `>` zamiast wymaganego
-przez BR-04 `>=`. Testy jednostkowe przechodzą z 19 zaliczonymi testami
-i 2 oczekiwanymi niepowodzeniami (łącznie z całym zestawem unit).
+W całym zestawie unit uruchomiono 21 przypadków: 19 zaliczonych i 2
+oczekiwane niepowodzenia (`test.fails`):
+
+- BR-04: próg 200,00 zł używa w implementacji `>` zamiast wymaganego `>=`;
+- BR-08: rabat 9,999 zł nie jest zaokrąglany do 10,00 zł.

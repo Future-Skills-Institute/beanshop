@@ -33,7 +33,7 @@ describe('pricing', () => {
   });
 
   test.fails('zaokrągla rabat procentowy do 0,01 zl (BR-06, BR-08)', () => {
-    // BUG: implementacja nie zaokrągla rabatu przed zwróceniem, BR-08
+    // BUG: implementacja zwraca 9.999 zamiast 10.00 po zaokrągleniu, BR-08
     expect(priceCart([{ lineTotal: 99.99 }], [code('KAWA10')], 'STANDARD').discount).toBe(10);
   });
 
