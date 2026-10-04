@@ -42,14 +42,14 @@ Ponowiono uruchomienie tą samą komendą:
 npm run test:mutation -- --force --mutate src/domain/pricing.ts
 ```
 
-- testy: 12 uruchomionych;
+- testy: 13 uruchomionych;
 - mutanty: 33;
 - zabite: 33;
 - przeżyte: 0;
 - timeouty/błędy: 0;
 - mutation score: **100,00%**.
 
-Test granicy 200,00 zł jest oznaczony jako oczekiwany błąd (`it.fails`),
+Test granicy 200,00 zł jest oznaczony jako oczekiwany błąd (`test.fails`),
 ponieważ implementacja w `src/domain/pricing.ts` używa `>` zamiast wymaganego
 przez BR-04 `>=`. Testy jednostkowe przechodzą z 19 zaliczonymi testami
-i 1 oczekiwanym niepowodzeniem.
+i 2 oczekiwanymi niepowodzeniami (łącznie z całym zestawem unit).

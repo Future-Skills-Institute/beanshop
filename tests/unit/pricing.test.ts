@@ -32,6 +32,11 @@ describe('pricing', () => {
     expect(discountAmount(subtotal, [{ code: 'TEST', type: 'PERCENT', value: percent }])).toBe(expected);
   });
 
+  test.fails('zaokrągla rabat procentowy do 0,01 zl (BR-06, BR-08)', () => {
+    // BUG: implementacja nie zaokrągla rabatu przed zwróceniem, BR-08
+    expect(priceCart([{ lineTotal: 99.99 }], [code('KAWA10')], 'STANDARD').discount).toBe(10);
+  });
+
   it('nalicza rabat procentowy i dostawę (BR-04, BR-06)', () => {
     const summary = priceCart([{ lineTotal: 100 }], [code('KAWA10')], 'STANDARD');
     expect(summary.discount).toBe(10);
