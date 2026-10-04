@@ -13,4 +13,10 @@ test.describe('Logowanie', () => {
     await loginPage.login(USERS.anna.email, 'zle-haslo');
     await expect(loginPage.error).toHaveText('Niepoprawny e-mail lub hasło');
   });
+
+  test('niezalogowany klient jest przekierowany z zamówień do logowania', async ({ page }) => {
+    await page.goto('/orders');
+
+    await expect(page).toHaveURL(/\/login\?next=\/orders$/);
+  });
 });
