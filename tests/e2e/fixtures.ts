@@ -4,11 +4,13 @@ import { USERS } from '../support/data';
 import { CartPage } from './pages/CartPage';
 import { CatalogPage } from './pages/CatalogPage';
 import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
 
 type Fixtures = {
   api: BeanShopApi;
   loggedInPage: Page;
   loginPage: LoginPage;
+  registerPage: RegisterPage;
   catalog: CatalogPage;
   cartPage: CartPage;
 };
@@ -26,6 +28,7 @@ export const test = base.extend<Fixtures>({
     await use(page);
   },
   loginPage: async ({ page }, use) => use(new LoginPage(page)),
+  registerPage: async ({ page }, use) => use(new RegisterPage(page)),
   catalog: async ({ page }, use) => use(new CatalogPage(page)),
   cartPage: async ({ page }, use) => use(new CartPage(page)),
 });
