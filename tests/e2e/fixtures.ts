@@ -5,10 +5,7 @@ import { CartPage } from './pages/CartPage';
 import { CatalogPage } from './pages/CatalogPage';
 import { LoginPage } from './pages/LoginPage';
 
-type CartItem = {
-  product: keyof typeof PRODUCTS;
-  qty: number;
-};
+type CartItem = { product: keyof typeof PRODUCTS; qty: number };
 
 type Fixtures = {
   api: BeanShopApi;
@@ -34,14 +31,15 @@ export const test = base.extend<Fixtures>({
   loginPage: async ({ page }, use) => use(new LoginPage(page)),
   catalog: async ({ page }, use) => use(new CatalogPage(page)),
   cartPage: async ({ page }, use) => use(new CartPage(page)),
-  cartWith: async ({ api, loggedInPage, cartPage }, use) => {
-    await api.login(USERS.anna.email, USERS.anna.password);
-
-    await use(async (items: CartItem[]) => {
+  // Przygotowuje koszyk zalogowanej Anny przez API i zwraca otwarta strone koszyka.
+  cartWith: async ({ loggedInPage, cartPage }, use) => {
+    await use(async (items) => {
       for (const { product, qty } of items) {
-        await api.addToCart(PRODUCTS[product].id, qty);
+        const res = await loggedInPage.request.post('/api/cart/items', {
+          data: { productId: PRODUCTS[product].id, quantity: qty },
+        });
+        if (!res.ok()) throw new Error(`Nie udalo sie dodac "${product}" do koszyka: ${res.status()}`);
       }
-
       await cartPage.goto();
       return cartPage;
     });
