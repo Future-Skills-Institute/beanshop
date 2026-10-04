@@ -26,11 +26,11 @@ describe('pricing', () => {
   });
 
   it('dokladnie nalicza rabat procentowy i sume BR-06 BR-08', () => {
-    const summary = priceCart([{ lineTotal: 100 }], [code('KAWA10')], 'STANDARD');
-    expect(summary.subtotal).toBe(100);
-    expect(summary.discount).toBe(10);
+    const summary = priceCart([{ lineTotal: 150 }], [code('KAWA10')], 'STANDARD');
+    expect(summary.subtotal).toBe(150);
+    expect(summary.discount).toBe(15);
     expect(summary.shipping).toBe(SHIPPING.STANDARD);
-    expect(summary.total).toBe(104.99);
+    expect(summary.total).toBe(149.99);
     expect(summary.appliedCodes).toEqual(['KAWA10']);
   });
 
