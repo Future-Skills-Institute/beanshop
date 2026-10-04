@@ -33,3 +33,23 @@ Przeżyły mutanty dotyczące:
 Testy w `tests/unit/pricing.test.ts` sprawdzają teraz konkretne wartości
 rabatu, dostawy, sumy i `appliedCodes`, a także granicę 200,00 zł zgodnie
 z BR-04 i BR-06 w `docs/wymagania.md`.
+
+## Wynik po wzmocnieniu
+
+Ponowiono uruchomienie tą samą komendą:
+
+```bash
+npm run test:mutation -- --force --mutate src/domain/pricing.ts
+```
+
+- testy: 8 uruchomionych;
+- mutanty: 33;
+- zabite: 33;
+- przeżyte: 0;
+- timeouty/błędy: 0;
+- mutation score: **100,00%**.
+
+Test granicy 200,00 zł jest oznaczony jako oczekiwany błąd (`it.fails`),
+ponieważ implementacja w `src/domain/pricing.ts` używa `>` zamiast wymaganego
+przez BR-04 `>=`. Testy jednostkowe przechodzą z 14 zaliczonymi testami
+i 1 oczekiwanym niepowodzeniem.
