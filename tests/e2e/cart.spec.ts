@@ -2,6 +2,12 @@ import { PRODUCTS } from '../support/data';
 import { expect, test } from './fixtures';
 
 test.describe('Koszyk', () => {
+  test('niezalogowany klient trafia do logowania po dodaniu produktu', async ({ page, catalog }) => {
+    await catalog.goto();
+    await catalog.addToCart('Etiopia Yirgacheffe');
+    await expect(page).toHaveURL('/login?next=/');
+  });
+
   test('licznik koszyka rosnie po dodaniu produktu', async ({ loggedInPage, catalog }) => {
     await catalog.goto();
     await catalog.addToCart('Etiopia Yirgacheffe');
