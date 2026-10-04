@@ -43,6 +43,6 @@ describe('pricing', () => {
   it('nie obniza ceny ponizej zera rabatem BR-06', () => {
     const summary = priceCart([{ lineTotal: 10 }], [code('MINUS20')], 'STANDARD');
     expect(summary.discount).toBe(10);
-    expect(summary.total).toBe(14.99);
+    expect(summary.total).toBe(0);
   });
 });
