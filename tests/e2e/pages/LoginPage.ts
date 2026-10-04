@@ -5,12 +5,14 @@ export class LoginPage {
   readonly password: Locator;
   readonly submit: Locator;
   readonly error: Locator;
+  readonly heading: Locator;
 
   constructor(private readonly page: Page) {
     this.email = page.getByLabel('E-mail');
     this.password = page.getByLabel('Hasło');
     this.submit = page.getByRole('button', { name: 'Zaloguj się' });
     this.error = page.locator('#login-error');
+    this.heading = page.getByRole('heading', { name: 'Logowanie' });
   }
 
   async goto() {
