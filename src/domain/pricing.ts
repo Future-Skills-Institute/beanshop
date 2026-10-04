@@ -47,7 +47,7 @@ export function discountAmount(subtotal: number, codes: DiscountCode[]): number 
 /** BR-04: darmowa dostawa standardowa od 200,00 zl wartosci produktow po rabacie. */
 export function shippingCost(afterDiscount: number, method: ShippingMethod): number {
   if (afterDiscount === 0) return 0;
-  const free = afterDiscount > SHIPPING.FREE_THRESHOLD;
+  const free = afterDiscount >= SHIPPING.FREE_THRESHOLD;
   if (method === 'EXPRESS') return free ? SHIPPING.EXPRESS_SURCHARGE : SHIPPING.EXPRESS;
   return free ? 0 : SHIPPING.STANDARD;
 }

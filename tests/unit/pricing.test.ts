@@ -9,26 +9,40 @@ describe('pricing', () => {
     expect(lineTotal(44.99, 3)).toBe(134.97);
   });
 
-  it('nalicza dostawe standardowa ponizej progu', () => {
-    expect(shippingCost(150, 'STANDARD')).toBe(SHIPPING.STANDARD);
+  it('nalicza dostawe standardowa ponizej progu BR-04', () => {
+    expect(shippingCost(199.99, 'STANDARD')).toBe(SHIPPING.STANDARD);
   });
 
-  it('daje darmowa dostawe powyzej progu', () => {
-    expect(shippingCost(250, 'STANDARD')).toBe(0);
+  it('daje darmowa dostawe od 200,00 zl BR-04', () => {
+    expect(shippingCost(200, 'STANDARD')).toBe(0);
   });
 
-  it('nalicza doplate za express przy darmowej dostawie', () => {
-    expect(shippingCost(250, 'EXPRESS')).toBe(SHIPPING.EXPRESS_SURCHARGE);
+  it('nalicza doplate express od progu darmowej dostawy BR-04', () => {
+    expect(shippingCost(200, 'EXPRESS')).toBe(SHIPPING.EXPRESS_SURCHARGE);
   });
 
-  it('nalicza rabat procentowy', () => {
+  it('nie nalicza dostawy dla pustego koszyka BR-04', () => {
+    expect(shippingCost(0, 'STANDARD')).toBe(0);
+  });
+
+  it('dokladnie nalicza rabat procentowy i sume BR-06 BR-08', () => {
     const summary = priceCart([{ lineTotal: 100 }], [code('KAWA10')], 'STANDARD');
-    expect(summary.total).toBeGreaterThan(0);
-    expect(summary.appliedCodes).toBeDefined();
+    expect(summary.subtotal).toBe(100);
+    expect(summary.discount).toBe(10);
+    expect(summary.shipping).toBe(SHIPPING.STANDARD);
+    expect(summary.total).toBe(104.99);
+    expect(summary.appliedCodes).toEqual(['KAWA10']);
   });
 
-  it('rabat kwotowy nie obniza ceny ponizej zera', () => {
+  it('dokladnie nalicza rabat kwotowy BR-06', () => {
+    const summary = priceCart([{ lineTotal: 150 }], [code('MINUS20')], 'STANDARD');
+    expect(summary.discount).toBe(20);
+    expect(summary.total).toBe(144.99);
+  });
+
+  it('nie obniza ceny ponizej zera rabatem BR-06', () => {
     const summary = priceCart([{ lineTotal: 10 }], [code('MINUS20')], 'STANDARD');
     expect(summary.discount).toBe(10);
+    expect(summary.total).toBe(14.99);
   });
 });
