@@ -18,10 +18,11 @@ npm run test:mutation -- --mutate src/domain/pricing.ts --testFiles tests/unit/p
 - time-outy: 0
 - mutation score: 100,00%
 
-Cały suite testów jednostkowych: 23 zaliczone oraz 2 oczekiwane porażki
+Cały suite testów jednostkowych: 24 zaliczone oraz 2 oczekiwane porażki
 (`it.fails`); sam `pricing.test.ts` zawiera 17 przypadków (w tym 2 w tabeli
 `it.each`). Oczekiwane porażki dokumentują niezgodności BR-04 (próg 200 zł)
 i BR-08 (brak zaokrąglenia sumy końcowej).
+
 ## Podstawa oczekiwanych wartości
 
 - BR-04: standardowa dostawa kosztuje 14,99 zł, jest darmowa od 200,00 zł,

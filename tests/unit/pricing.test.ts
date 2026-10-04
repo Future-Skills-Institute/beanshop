@@ -31,12 +31,10 @@ describe('pricing', () => {
   });
 
   it('nie nalicza dostawy standardowej dla pustego koszyka // BR-04', () => {
-    // BR-04
     expect(shippingCost(0, 'STANDARD')).toBe(0);
   });
 
   it('nie nalicza dostawy express dla pustego koszyka // BR-04', () => {
-    // BR-04
     expect(shippingCost(0, 'EXPRESS')).toBe(0);
   });
 
@@ -66,12 +64,10 @@ describe('pricing', () => {
 
   it('rabat kwotowy nie obniża ceny poniżej zera // BR-06', () => {
     const summary = priceCart([{ lineTotal: 10 }], [code('MINUS20')], 'STANDARD');
-    // BR-06
     expect(summary.discount).toBe(10);
   });
 
   it('nalicza rabat procentowy dokładnie według wartości kodu // BR-06', () => {
-    // BR-06
     expect(discountAmount(250, [code('KAWA10')])).toBe(25);
   });
 
@@ -81,12 +77,20 @@ describe('pricing', () => {
     expect(summary.total).toBe(114.99);
   });
 
+  it('nie zwraca ujemnej sumy koszyka // BR-08', () => {
+    fc.assert(
+      fc.property(fc.integer({ min: 0, max: 100000 }).map((cents) => cents / 100), (subtotal) => {
+        const summary = priceCart([{ lineTotal: subtotal }], [code('MINUS20')], 'STANDARD');
+        expect(summary.total).toBeGreaterThanOrEqual(0);
+      }),
+    );
+  });
+
   it.fails('zaokrągla sumę koszyka do 2 miejsc // BR-08', () => {
     // BUG: suma końcowa nie jest zaokrąglana po dodaniu dostawy; zgłosić jako błąd precyzji kwot.
     fc.assert(
       fc.property(fc.integer({ min: 0, max: 100000 }).map((cents) => cents / 100), (subtotal) => {
         const summary = priceCart([{ lineTotal: subtotal }], [code('MINUS20')], 'STANDARD');
-        expect(summary.total).toBeGreaterThanOrEqual(0);
         expect(summary.total).toBe(Number(summary.total.toFixed(2)));
       }),
     );
